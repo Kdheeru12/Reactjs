@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 //import Todos from './Todo'
 import './TodoItems.css'
+
 export class TodoItems extends Component {
     complete = ()=>{
         /*
@@ -12,7 +13,6 @@ export class TodoItems extends Component {
         }else{
             return{
             textDecoration:'none'
-
             }
         }
         */
@@ -33,7 +33,7 @@ export class TodoItems extends Component {
                 <p style={this.complete()}>
                     <input type="checkbox" onChange = {this.props.check.bind(this,this.props.todo.id)}/>
                     {this.props.todo.title}
-                    <button className='btn' onClick={this.props.delete.bind(this,id)}> X </button>
+                    <button className='b' onClick={this.props.delete.bind(this,id)}> X </button>
                 </p>
             </div>
         )

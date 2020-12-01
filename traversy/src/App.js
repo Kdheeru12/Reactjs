@@ -2,8 +2,9 @@ import './App.css';
 import React, { Component } from 'react';
 import Todos from './components/Todo'
 //import TodoItems from './components/TodoItems'
-
-
+import Header from './components/header/header'
+import AddTodos from './components/AddTodos'
+import { v4 as uuidv4 } from 'uuid';
 /*
 function App() {
   return (
@@ -27,12 +28,12 @@ class App extends Component{
       {
         id:2,
         title:'Hello2',
-        completed:true
+        completed:false
       },
       {
         id:3,
         title:'Hello3',
-        completed:true
+        completed:false
       },
     ]
   }
@@ -49,17 +50,21 @@ check = (id) =>{
 }
 delete = (id) => {
   this.setState({
-    todos:[...this.state.todos.filter(i => i.id != id)]
+    todos:[...this.state.todos.filter(i => i.id !== id)]
   })
 }
-
+ad = (title) =>{
+  this.setState({
+    todos:[...this.state.todos,{id:uuidv4(),title:title,completed:false}]
+  })
+}
   render(){
     //console.log(this.state.todos);
     return(
       
       <div className="App">
-      <h1>dd</h1>
-      
+      <Header />
+      <AddTodos ad = {this.ad} />
       <Todos todos={this.state.todos} check = {this.check} delete={this.delete}  />
       </div>
     )
