@@ -5,6 +5,8 @@ import Todos from './components/Todo'
 import Header from './components/header/header'
 import AddTodos from './components/AddTodos'
 import { v4 as uuidv4 } from 'uuid';
+import { BrowserRouter as Router,Route } from 'react-router-dom'
+import About from './components/pages/about'
 /*
 function App() {
   return (
@@ -61,12 +63,23 @@ ad = (title) =>{
   render(){
     //console.log(this.state.todos);
     return(
-      
+      <Router>
       <div className="App">
       <Header />
-      <AddTodos ad = {this.ad} />
-      <Todos todos={this.state.todos} check = {this.check} delete={this.delete}  />
+      <Route path='/' exact render= {
+        props =>(
+          <React.Fragment>
+                  <AddTodos ad = {this.ad} />
+                  <Todos todos={this.state.todos} check = {this.check} delete={this.delete}  />
+          </React.Fragment>
+        )
+      } />
+      <Route path='/about' component={About} />
+
+
       </div>
+      </Router>
+   
     )
   }
   
