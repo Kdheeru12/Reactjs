@@ -4,6 +4,7 @@ import Progress from './Progress';
 const Upload = () => {
     const [file,Selected] = useState(null)
     const [error,SetError] = useState('')
+    const [display,Setdisplayname] = useState('')
     const types = ['image/png','image/jpg','image/jpeg']
     function select(e){
         let chossen = e.target.files[0]
@@ -29,9 +30,8 @@ const Upload = () => {
       <div className="output">
         { error && <div className="error">{ error }</div>}
         { file && <div>{ file.name }</div> }
-    
-        { file && <Progress file={file} Selected={Selected} />}
-
+        { file && <Progress display={display} Setdisplayname={Setdisplayname} file={file} Selected={Selected} />}
+        {display}
       </div>
     </form>
         </div>
