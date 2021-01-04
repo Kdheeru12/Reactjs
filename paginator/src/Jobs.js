@@ -1,19 +1,18 @@
-import React from 'react';
+import React,{useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
+import Collapse from '@material-ui/core/Collapse';
+import Fetchjobs from './Fetchjobs';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -64,7 +63,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Pricing() {
   const classes = useStyles();
-
+  const state = Fetchjobs()
+  const [open, setopen] = useState(false);
   return (
     <React.Fragment>
       <CssBaseline />
@@ -98,34 +98,42 @@ export default function Pricing() {
       {/* End hero unit */}
       <Container maxWidth="md" component="main">
         <Grid container spacing={5} alignItems="flex-end">
-            <Grid item  xs={12} sm={6} md={4}>
+        {state.jobs.map(i =>(
+            <Grid item key={i.id} xs={12} sm={6} md={4}>
               <Card>
                 <CardContent>
                   <div className={classes.cardPricing}>
                     <Typography component="h2" variant="h3" color="textPrimary">
-                      dddd
+                      {i.company}
                     </Typography>
                     <Typography variant="h6" color="textSecondary">
-                      /mo
+                      /{new Date(i.created_at).toLocaleDateString()}
                     </Typography>
                   </div>
                   <ul>
-                      <Typography component="li" variant="subtitle1" align="center" >
-                        jdjkd
-                      </Typography>
-                   
+                      <Button onClick={() =>setopen((prev) =>(!prev))} variant="contained" color="primary" >
+                          {open ? 'hide-details':'view details'}
+                      </Button>
+                      <Collapse in={open}>
+                        <div>
+                        {i.description}
+                        </div>
+                      </Collapse>
                   </ul>
                 </CardContent>
                 <CardActions>
-                  <Button fullWidth  color="primary">
-                    ddd
+                  <Button href={i.how_to_apply} fullWidth  color="primary">
+                    <div style={{wordBreak:'break-all'}}>
+                        {i.how_to_apply}
+                    </div>
+                    
                   </Button>
                 </CardActions>
               </Card>
             </Grid>
+        ))} 
         </Grid>
       </Container>
-
     </React.Fragment>
   );
 }
