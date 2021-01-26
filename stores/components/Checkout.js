@@ -1,86 +1,27 @@
 import React,{useState} from 'react'
 import {Helmet} from 'react-helmet'
-
-import SimpleReactValidator from 'simple-react-validator';
+import { useForm } from 'react-hook-form';
 import Wraper from './Wraper';
-// class checkOut extends Component {
-
-//     constructor (props) {
-//         super (props)
-
-//         this.state = {
-//             payment:'stripe',
-//             first_name:'',
-//             last_name:'',
-//             phone:'',
-//             email:'',
-//             country:'',
-//             address:'',
-//             city:'',
-//             state:'',
-//             pincode:'',
-//             create_account: ''
-//         }
-//         this.validator = new SimpleReactValidator();
-//     }
-
-//     setStateFromInput = (event) => {
-//         var obj = {};
-//         obj[event.target.name] = event.target.value;
-//         this.setState(obj);
-
-//       }
-
-//       setStateFromCheckbox = (event) => {
-//           var obj = {};
-//           obj[event.target.name] = event.target.checked;
-//           this.setState(obj);
-
-//           if(!this.validator.fieldValid(event.target.name))
-//           {
-//               this.validator.showMessages();
-//           }
-//         }
-// }
 
 export default function Checkout() {
-    const initialState = Object.freeze({
-        first_name:'',
-        last_name:'',
-        phone:'',
-        email:'',
-        country:'',
-        address:'',
-        city:'',
-        state:'',
-        pincode:'',
-        create_account: ''
-      })
-    const [Form, setForm] = useState(initialState);
-    const validator = new SimpleReactValidator()
-    const Change = (e) =>{
-        setForm({
-          ...Form,
-          [e.target.name] : e.target.value.trim(),
-        })
-      }
-    const Submit =(e) =>{
-        console.log('ddd',e);
-        // if(!validator.fieldValid(e.target.name)){
-        //     validator.showMessages()
-        // }
-        
-    }
-    console.log(Form)
-    const StripeClick = () => {
+    // initialize the hook
+    const [obj, setObj] = useState({});
+    const { register, handleSubmit, errors } = useForm(); 
 
-        if (validator.allValid()) {
+    const onSubmit = data => {
+
+        if (data !== '') {
             alert('You submitted the form and stuff!');
+            console.log(data)
         } else {
-          validator.showMessages();
-          // rerender to show messages for the first time
-          this.forceUpdate();
+            errors.showMessages();
         }
+    };                                                                                                                                                                                                                                                                                                                                                          
+
+    const setStateFromInput = (event) => {
+        obj[event.target.name] = event.target.value;
+        setObj(obj)
+        console.log(obj);
     }
     return (
         <div>
@@ -98,7 +39,7 @@ export default function Checkout() {
             <div className="container padding-cls">
                 <div className="checkout-page">
                     <div className="checkout-form">
-                        <form>
+                        <form  onSubmit={handleSubmit(onSubmit)}>
                             <div className="checkout row">
                                 <div className="col-lg-6 col-sm-12 col-xs-12">
                                     <div className="checkout-title">
@@ -107,59 +48,58 @@ export default function Checkout() {
                                     <div className="row check-out">
                                         <div className="form-group col-md-6 col-sm-6 col-xs-12">
                                             <div className="field-label">First Name</div>
-                                            <input type="text" name="first_name" value={Form.first_name} onChange={Change} />
-                                            {validator.message('first_name', Form.first_name, 'required|alpha')}
+                                            <input type="text" className={`${errors.firstName?'error_border':''}`} name="first_name" ref={register({ required: true })} onChange={setStateFromInput} />
+                                            <span className="error-message">{errors.firstName && 'First name is required'}</span>
+                                           
                                         </div>
                                         <div className="form-group col-md-6 col-sm-6 col-xs-12">
                                             <div className="field-label">Last Name</div>
-                                            <input type="text" name="last_name" value={Form.last_name} onChange={Change} />
-                                            {validator.message('last_name', Form.last_name, 'required|alpha')}
+                                            <input type="text" className={`${errors.last_name?'error_border':''}`}  name="last_name" ref={register({ required: true })} onChange={setStateFromInput} />
+                                            <span className="error-message">{errors.last_name && 'Last name is required'}</span>
                                         </div>
                                         <div className="form-group col-md-6 col-sm-6 col-xs-12">
                                             <div className="field-label">Phone</div>
-                                            <input type="text" name="phone"  value={Form.phone} onChange={Change} />
-                                            {validator.message('phone', Form.phone, 'required|phone')}
+                                            <input type="text" name="phone" className={`${errors.phone?'error_border':''}`} ref={register({ required: true, pattern: /[6-9]{1}[0-9]{9}/ })} onChange={setStateFromInput} />
+                                            <span className="error-message">{errors.phone && 'Please enter proper phonenumber.'}</span>
                                         </div>
                                         <div className="form-group col-md-6 col-sm-6 col-xs-12">
                                             <div className="field-label">Email Address</div>
-                                            <input type="text" name="email" value={Form.email} onChange={Change} />
-                                            {validator.message('email', Form.email, 'required|email')}
+                                            <input className="form-control" className={`${errors.email?'error_border':''}`} type="text" name="email" ref={register({ required: true, pattern: /^\S+@\S+$/i })} onChange={setStateFromInput} />
+                                            <span className="error-message">{errors.email && 'Please enter proper email address .'}</span>
                                         </div>
                                         <div className="form-group col-md-12 col-sm-12 col-xs-12">
                                             <div className="field-label">Country</div>
-                                            <select name="country" value={Form.country} onChange={Change}>
+                                            <select name="country" onChange={setStateFromInput} ref={register({ required: true })}>
                                                 <option>India</option>
                                                 <option>South Africa</option>
                                                 <option>United State</option>
                                                 <option>Australia</option>
                                             </select>
-                                            {validator.message('country', Form.country, 'required')}
                                         </div>
                                         <div className="form-group col-md-12 col-sm-12 col-xs-12">
                                             <div className="field-label">Address</div>
-                                            <input type="text" name="address" value={Form.address} onChange={Change} placeholder="Street address" />
-                                            {validator.message('address', Form.address, 'required|min:20|max:120')}
+                                            <input className="form-control" className={`${errors.address?'error_border':''}`} type="text" name="address" ref={register({ required: true, min: 20, max: 120 })} placeholder="Street address" onChange={setStateFromInput} />
+                                            <span className="error-message">{errors.address && 'Please right your address .'}</span>
                                         </div>
                                         <div className="form-group col-md-12 col-sm-12 col-xs-12">
                                             <div className="field-label">Town/City</div>
-                                            <input type="text" name="city" value={Form.city} onChange={Change} />
-                                            {validator.message('city', Form.city, 'required|alpha')}
+                                            <input className="form-control" type="text" className={`${errors.city?'error_border':''}`} name="city" ref={register({ required: true })} onChange={setStateFromInput} />
+                                            <span className="error-message">{errors.city && 'select one city'}</span>
                                         </div>
                                         <div className="form-group col-md-12 col-sm-6 col-xs-12">
                                             <div className="field-label">State / County</div>
-                                            <input type="text" name="state" value={Form.state} onChange={Change} />
-                                            {validator.message('state', Form.state, 'required|alpha')}
+                                            <input className="form-control" type="text" className={`${errors.state?'error_border':''}`} name="state" ref={register({ required: true })} onChange={setStateFromInput} />
+                                            <span className="error-message">{errors.state && 'select one state'}</span>
                                         </div>
                                         <div className="form-group col-md-12 col-sm-6 col-xs-12">
                                             <div className="field-label">Postal Code</div>
-                                            <input type="text" name="pincode" value={Form.spincode} onChange={Change} />
-                                            {validator.message('pincode', Form.pincode, 'required|integer')}
+                                            <input className="form-control" type="text" name="pincode" className={`${errors.pincode?'error_border':''}`} ref={register({ pattern: /\d+/ })} onChange={setStateFromInput} />
+                                            <span className="error-message">{errors.pincode && 'Required integer'}</span>
                                         </div>
-                                        {/* <div className="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <input type="checkbox" name="create_account" id="account-option"  checked={Form.create_account} onChange={this.setStateFromCheckbox}/>
-                                            &ensp; <label htmlFor="account-option">Create An Account?</label>
-                                            {validator.message('checkbox', Form.create_account, 'create_account')}
-                                        </div> */}
+                                        <div className="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <input type="checkbox" name="create_account" id="account-option" />
+                                                    &ensp; <label htmlFor="account-option">Create An Account?</label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="col-lg-6 col-sm-12 col-xs-12">
@@ -214,7 +154,7 @@ export default function Checkout() {
                                             </div> */}
                    
                                             <div className="text-right">
-                                                <button type="button" className="btn-solid btn" onClick={Submit} >Place Order</button>
+                                                <button type="Submit" className="btn-solid btn" >Place Order</button>
                                             </div>
                                            
                                         </div>
